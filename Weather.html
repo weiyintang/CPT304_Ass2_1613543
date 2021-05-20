@@ -1,0 +1,92 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="style.css">
+</head>
+ 
+<body>
+
+    <ul>
+      <li><a class="active" href="index.php">Holiday</a></li>
+      <li><a href="Weather.html">Weather</a></li>
+      <li><a href="#contact">Rental</a></li>
+    </ul>
+
+    <select id="selectCountry">
+        <option value="indian">India</option>
+        <option value="china">China</option>
+        <option value="usa">USA</option>
+        <option value="uk">UK</option>
+        <option value="bm">Bermuda</option>
+        <option value="swedish">Sweden</option>
+    </select>
+  
+
+    <input id="city" type="text" placeholder="Enter the city">
+    <input id="day" type="text" placeholder="Enter the day">
+    <button type="button" onclick="getWeather()">show weather</button>
+    
+    <div class="container">
+    <div class="card">
+      <h1 class="name" id="name"></h1>
+      <p class="showdate" id="showdate"></p>
+      <p class="mintemp" id="mintemp"></p>
+      <p class="maxtemp" id="maxtemp"></p>
+      <p class="desc" id="desc"></p>
+    </div>
+    </div>
+  
+  
+</body>
+<script type="text/javascript">
+    
+
+function getWeather(){
+    
+    var main = document.getElementById("name");
+    var mintemp = document.getElementById("mintemp");
+    var maxtemp = document.getElementById("maxtemp");
+    var desc = document.getElementById("desc");
+    var showdate = document.getElementById("showdate");
+    
+    var date1 = document.getElementById("day").value;
+    var date2 = new Date();
+    var date3 = new Date(date1).getTime() - date2.getTime();
+    var day=Math.floor(date3/(24*3600*1000))+1;
+    
+    if(day<0){
+        alert("Wrong Data!")
+    }
+    
+    if(day>15){
+        alert("Can not forecast more than 15 Days!")
+    }
+    
+    var input = document.getElementById("city").value;
+    var country = $("#selectCountry").val();
+    var url = "https://api.weatherbit.io/v2.0/forecast/daily?city="+input+"&country="+country+"&key=7897d2b2970249d8990c48c4290f45c9";
+
+    
+    $.getJSON( url, function( data ) {
+        var items = [];
+        console.log(data);
+        
+        var mintempValue = data.data[day].min_temp;
+        var maxtempValue = data.data[day].max_temp;
+        var nameValue = data.timezone;
+        var descValue = data.data[day].weather.description;
+        var dateValue = data.data[day].datetime;
+        
+        main.innerHTML = nameValue;
+        desc.innerHTML = "Desc - "+descValue;
+        mintemp.innerHTML = "Min Temp - "+mintempValue;
+        maxtemp.innerHTML = "Max Temp - "+maxtempValue;
+        showdate.innerHTML = "Date - "+dateValue;
+
+    });
+}
+</script>
